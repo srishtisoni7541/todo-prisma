@@ -1,15 +1,22 @@
-
-import { Body, Controller, Delete, Get, Post, Put, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { TodoServices } from './todo.service';
 import { CreateTodoDto } from './dto/todo.dto';
-import { JwtAuthGuard } from 'server/src/auth/guards/jwt-auth.guard';
-import { title } from 'process';
- @UseGuards(JwtAuthGuard)
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+
+@UseGuards(JwtAuthGuard)
 @Controller('todos')
 export class TodoController {
   constructor(private readonly Todo: TodoServices) {}
 
- 
   @Get('/all')
   getTodos(@Req() req) {
     // console.log(' GET /todos/all by user:', req.user);
@@ -21,7 +28,6 @@ export class TodoController {
     const user = req.user;
 
     if (!user || !user.sub) {
-      
       console.error(' User info missing in request!');
       throw new Error('Unauthorized');
     }
@@ -29,26 +35,44 @@ export class TodoController {
     return this.Todo.CreateTodo(todoDto, user.sub);
   }
   @Put('/update-todo')
-  async updateTodo(@Body() todoDto:CreateTodoDto,@Req() req){
+  async updateTodo(@Body() todoDto: CreateTodoDto, @Req() req) {
     const user = req.user;
 
     if (!user || !user.sub) {
-      
       console.error(' User info missing in request!');
       throw new Error('Unauthorized');
     }
-    return this.Todo.UpdateTodo(todoDto,user.sub);
+    return this.Todo.UpdateTodo(todoDto, user.sub);
   }
- @Delete('/delete-todo')
-async deleteTodo(@Body('id') todoId: number, @Req() req) {
-  const user = req.user;
+  @Delete('/delete-todo')
+  async deleteTodo(@Body('id') todoId: number, @Req() req) {
+    const user = req.user;
 
-  if (!user || !user.sub) {
-    console.error('User info missing in request!');
-    throw new Error('Unauthorized');
+    if (!user || !user.sub) {
+      console.error('User info missing in request!');
+      throw new Error('Unauthorized');
+    }
+
+    return this.Todo.DeleteTodoById(todoId, user.sub);
   }
+  @Get('/public-todo')
+  async GetPublicTodo(@Req() req){
+    const user = req.user;
+   if (!user || !user.sub) {
+      console.error(' User info missing in request!');
+      throw new Error('Unauthorized');
+    }
+    return this.Todo.getPublicTodos();
 
-  return this.Todo.DeleteTodoById(todoId, user.sub);
-}
+  }
+  @Get('/private-todo')
+  async GetPrivateTodo(@Req() req){
+    const user = req.user;
+   if (!user || !user.sub) {
+      console.error(' User info missing in request!');
+      throw new Error('Unauthorized');
+    }
+    return this.Todo.getPrivateTodos();
 
+  }
 }

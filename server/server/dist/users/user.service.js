@@ -8,13 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const bcrypt = require("bcryptjs");
-const auth_service_1 = require("server/src/auth/auth.service");
+const auth_service_1 = require("../auth/auth.service");
 let UserService = class UserService {
     prisma;
     authService;
@@ -89,10 +88,25 @@ let UserService = class UserService {
         await this.prisma.user.delete({ where: { email: dto.email } });
         return { message: 'User Account Deleted Successfully!' };
     }
+    async GetUser(email) {
+        const user = await this.prisma.user.findUnique({
+            where: { email },
+            include: {
+                todos: true,
+            },
+        });
+        if (!user) {
+            return { message: 'User not found!' };
+        }
+        return {
+            message: 'User fetched successfully!',
+            user,
+        };
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService, typeof (_a = typeof auth_service_1.AuthService !== "undefined" && auth_service_1.AuthService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService, auth_service_1.AuthService])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto, LoginDto } from './dto/user.dto';
 import * as bcrypt from 'bcryptjs';
-import { AuthService } from 'server/src/auth/auth.service';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -89,5 +89,23 @@ const token = await this.authService.generateToken(payload)
 
     await this.prisma.user.delete({ where: { email: dto.email } });
     return { message: 'User Account Deleted Successfully!' };
+  }
+ 
+  async GetUser(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+       include: {
+      todos: true,
+    },
+    });
+
+    if (!user) {
+      return { message: 'User not found!' };
+    }
+
+    return {
+      message: 'User fetched successfully!',
+      user,
+    };
   }
 }

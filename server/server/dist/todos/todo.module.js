@@ -10,7 +10,7 @@ exports.TodoModule = void 0;
 const common_1 = require("@nestjs/common");
 const todo_controller_1 = require("./todo.controller");
 const todo_service_1 = require("./todo.service");
-const auth_module_1 = require("server/src/auth/auth.module");
+const auth_module_1 = require("../auth/auth.module");
 let TodoModule = class TodoModule {
 };
 exports.TodoModule = TodoModule;

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'server/src/prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTodoDto } from './dto/todo.dto';
 
 @Injectable()
@@ -56,7 +56,9 @@ export class TodoServices {
       });
 
       if (!todo) {
-        return { message: 'Todo does not exist or you do not have permission!' };
+        return {
+          message: 'Todo does not exist or you do not have permission!',
+        };
       }
 
       const updatedTodo = await this.prisma.todo.update({
@@ -99,4 +101,29 @@ export class TodoServices {
       throw new Error('Something went wrong while deleting the todo.');
     }
   }
+
+  async getPublicTodos() {
+    const todos = await this.prisma.todo.findMany({
+      where: {
+        visibility: 'PUBLIC',
+      },
+    });
+
+    return {
+      message: 'Public todos fetched successfully!',
+      todos,
+    };
+  }
+  async getPrivateTodos() {
+     const todos = await this.prisma.todo.findMany({
+       where: {
+         visibility: 'PRIVATE',
+       },
+     });
+ 
+     return {
+       message: 'Public todos fetched successfully!',
+       todos,
+     };
+   }
 }

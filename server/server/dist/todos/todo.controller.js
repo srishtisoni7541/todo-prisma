@@ -16,7 +16,7 @@ exports.TodoController = void 0;
 const common_1 = require("@nestjs/common");
 const todo_service_1 = require("./todo.service");
 const todo_dto_1 = require("./dto/todo.dto");
-const jwt_auth_guard_1 = require("server/src/auth/guards/jwt-auth.guard");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 let TodoController = class TodoController {
     Todo;
     constructor(Todo) {
@@ -48,6 +48,22 @@ let TodoController = class TodoController {
             throw new Error('Unauthorized');
         }
         return this.Todo.DeleteTodoById(todoId, user.sub);
+    }
+    async GetPublicTodo(req) {
+        const user = req.user;
+        if (!user || !user.sub) {
+            console.error(' User info missing in request!');
+            throw new Error('Unauthorized');
+        }
+        return this.Todo.getPublicTodos();
+    }
+    async GetPrivateTodo(req) {
+        const user = req.user;
+        if (!user || !user.sub) {
+            console.error(' User info missing in request!');
+            throw new Error('Unauthorized');
+        }
+        return this.Todo.getPrivateTodos();
     }
 };
 exports.TodoController = TodoController;
@@ -82,6 +98,20 @@ __decorate([
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], TodoController.prototype, "deleteTodo", null);
+__decorate([
+    (0, common_1.Get)('/public-todo'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], TodoController.prototype, "GetPublicTodo", null);
+__decorate([
+    (0, common_1.Get)('/private-todo'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], TodoController.prototype, "GetPrivateTodo", null);
 exports.TodoController = TodoController = __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('todos'),

@@ -8,11 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TodoServices = void 0;
 const common_1 = require("@nestjs/common");
-const prisma_service_1 = require("server/src/prisma/prisma.service");
+const prisma_service_1 = require("../prisma/prisma.service");
 let TodoServices = class TodoServices {
     prisma;
     constructor(prisma) {
@@ -61,7 +60,9 @@ let TodoServices = class TodoServices {
                 },
             });
             if (!todo) {
-                return { message: 'Todo does not exist or you do not have permission!' };
+                return {
+                    message: 'Todo does not exist or you do not have permission!',
+                };
             }
             const updatedTodo = await this.prisma.todo.update({
                 where: { id: todo.id },
@@ -100,10 +101,32 @@ let TodoServices = class TodoServices {
             throw new Error('Something went wrong while deleting the todo.');
         }
     }
+    async getPublicTodos() {
+        const todos = await this.prisma.todo.findMany({
+            where: {
+                visibility: 'PUBLIC',
+            },
+        });
+        return {
+            message: 'Public todos fetched successfully!',
+            todos,
+        };
+    }
+    async getPrivateTodos() {
+        const todos = await this.prisma.todo.findMany({
+            where: {
+                visibility: 'PRIVATE',
+            },
+        });
+        return {
+            message: 'Public todos fetched successfully!',
+            todos,
+        };
+    }
 };
 exports.TodoServices = TodoServices;
 exports.TodoServices = TodoServices = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof prisma_service_1.PrismaService !== "undefined" && prisma_service_1.PrismaService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], TodoServices);
 //# sourceMappingURL=todo.service.js.map

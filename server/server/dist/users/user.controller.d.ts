@@ -4,18 +4,44 @@ export declare class UserController {
     private userService;
     constructor(userService: UserService);
     getAll(): import(".prisma/client").Prisma.PrismaPromise<{
+        id: number;
         name: string;
         email: string;
         password: string;
         role: import(".prisma/client").$Enums.Role;
-        id: number;
         createdAt: Date;
     }[]>;
+    getUser(req: any): Promise<{
+        message: string;
+        user?: undefined;
+    } | {
+        message: string;
+        user: {
+            todos: {
+                id: number;
+                createdAt: Date;
+                title: string;
+                description: string | null;
+                status: import(".prisma/client").$Enums.Status;
+                visibility: import(".prisma/client").$Enums.Visibility;
+                dueDate: Date | null;
+                userId: number;
+                updatedAt: Date;
+            }[];
+        } & {
+            id: number;
+            name: string;
+            email: string;
+            password: string;
+            role: import(".prisma/client").$Enums.Role;
+            createdAt: Date;
+        };
+    }>;
     create(dto: CreateUserDto): Promise<{
+        id: number;
         name: string;
         email: string;
         role: import(".prisma/client").$Enums.Role;
-        id: number;
         createdAt: Date;
     } | {
         msg: string;
@@ -26,20 +52,20 @@ export declare class UserController {
         user?: undefined;
     } | {
         message: string;
-        access_token: any;
+        access_token: string;
         user: {
+            id: number;
             name: string;
             email: string;
             role: import(".prisma/client").$Enums.Role;
-            id: number;
             createdAt: Date;
         };
     }>;
     updateUser(dto: CreateUserDto): Promise<{
+        id: number;
         name: string;
         email: string;
         role: import(".prisma/client").$Enums.Role;
-        id: number;
         createdAt: Date;
     } | {
         message: string;
