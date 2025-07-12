@@ -31,3 +31,12 @@ export const getProfile = async (token: string) => {
   return res.data;
 };
 
+export const LogoutUser = async(token:string)=>{
+ const res = await API.get("/users/logout", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  console.log(res.data);
+  return res.data;
+}

@@ -41,6 +41,10 @@ let UserController = class UserController {
     DeleteUser(dto) {
         return this.userService.DeleteUser(dto);
     }
+    async UserLogout(res) {
+        res.clearCookie('token');
+        return res.status(200).json({ message: 'Logged out successfully!' });
+    }
 };
 exports.UserController = UserController;
 __decorate([
@@ -90,6 +94,13 @@ __decorate([
     __metadata("design:paramtypes", [user_dto_1.CreateUserDto]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "DeleteUser", null);
+__decorate([
+    (0, common_1.Get)('/logout'),
+    __param(0, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "UserLogout", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [user_service_1.UserService])

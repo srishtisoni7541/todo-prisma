@@ -1,5 +1,6 @@
 import { UserService } from './user.service';
 import { CreateUserDto, LoginDto } from './dto/user.dto';
+import { Response } from 'express';
 export declare class UserController {
     private userService;
     constructor(userService: UserService);
@@ -73,4 +74,5 @@ export declare class UserController {
     DeleteUser(dto: CreateUserDto): Promise<{
         message: string;
     }>;
+    UserLogout(res: Response): Promise<Response<any, Record<string, any>>>;
 }

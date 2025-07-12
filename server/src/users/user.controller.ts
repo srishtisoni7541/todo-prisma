@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, UsePipes, ValidationPipe, Put, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, UsePipes, ValidationPipe, Put, Delete, UseGuards, Req, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, LoginDto } from './dto/user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Response } from 'express';
+
 
 @Controller('users')
 export class UserController {
@@ -39,4 +41,10 @@ export class UserController {
   DeleteUser(@Body() dto:CreateUserDto){
     return this.userService.DeleteUser(dto);
   }
+   @Get('/logout')
+  async UserLogout(@Res() res: Response) {
+    res.clearCookie('token');
+    return res.status(200).json({ message: 'Logged out successfully!' });
+  }
 }
+

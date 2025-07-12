@@ -91,7 +91,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TodoController.prototype, "updateTodo", null);
 __decorate([
-    (0, common_1.Delete)('/delete-todo'),
+    (0, common_1.Post)('/delete-todo'),
     __param(0, (0, common_1.Body)('id')),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),

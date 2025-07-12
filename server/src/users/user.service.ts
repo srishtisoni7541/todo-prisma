@@ -1,5 +1,5 @@
 
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable, Res } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto, LoginDto } from './dto/user.dto';
 import * as bcrypt from 'bcryptjs';
@@ -108,4 +108,10 @@ const token = await this.authService.generateToken(payload)
       user,
     };
   }
+  
+  
+  
 }
+
+
+

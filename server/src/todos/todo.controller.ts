@@ -44,7 +44,7 @@ export class TodoController {
     }
     return this.Todo.UpdateTodo(todoDto, user.sub);
   }
-  @Delete('/delete-todo')
+  @Post('/delete-todo')
   async deleteTodo(@Body('id') todoId: number, @Req() req) {
     const user = req.user;
 

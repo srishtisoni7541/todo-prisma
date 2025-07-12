@@ -1,31 +1,30 @@
-import { Button } from "@/components/ui/button";
-import { TodoCard } from "./TodoCard";
-import { Plus } from "lucide-react";
 import { Todo } from "@/rypes";
+import { TodoCard } from "./TodoCard";
 
-
-interface TodoListProps {
+export const TodoList = ({
+  todos,
+  onToggleLike,
+  onEdit, 
+  onDelete
+}: {
   todos: Todo[];
   onToggleLike: (id: string) => void;
-}
-
-export const TodoList: React.FC<TodoListProps> = ({ todos, onToggleLike }) => {
-  if (todos.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-gray-500 text-lg">No todos found</p>
-        <Button className="mt-4">
-          <Plus className="w-4 h-4 mr-2" />
-          Add First Todo
-        </Button>
-      </div>
-    );
-  }
+  onEdit: (todo: Todo) => void; 
+  onDelete:(todo:Todo)=>void;
+}) => {
+  if (todos.length === 0)
+    return <p className="text-center text-gray-500">No todos found.</p>;
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {todos.map((todo) => (
-        <TodoCard key={todo.id} todo={todo} onToggleLike={onToggleLike} />
+        <TodoCard
+          key={todo.id}
+          todo={todo}
+          onEdit={onEdit} 
+          onToggleLike={onToggleLike}
+          onDelete={onDelete}
+        />
       ))}
     </div>
   );

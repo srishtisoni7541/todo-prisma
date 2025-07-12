@@ -1,96 +1,86 @@
-"use client";
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { CreateTodo } from "@/app/services/todo";
+import { CreateTodo, UpdateTodo } from "@/app/services/todo";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
-interface Props {
+const AddTodoForm = ({
+  onTodoCreated,
+  selectedTodo,
+  clearSelectedTodo,
+}: {
   onTodoCreated: () => void;
-}
+  selectedTodo: Todo | null;
+  clearSelectedTodo: () => void;
+}) => {
+  const { register, handleSubmit, reset, setValue } = useForm();
 
-const AddTodoForm: React.FC<Props> = ({ onTodoCreated }) => {
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    dueDate: "",
-    status: "PENDING",
-    visibility: "PUBLIC",
-  });
+  useEffect(() => {
+    if (selectedTodo) {
+      setValue("title", selectedTodo.title);
+      setValue("description", selectedTodo.description);
+      setValue("status", selectedTodo.status);
+      setValue("visibility", selectedTodo.visibility);
+      setValue("dueDate", selectedTodo.dueDate?.split("T")[0] || "");
+    }
+  }, [selectedTodo]);
 
-  const [loading, setLoading] = useState(false);
+  const onSubmit = async (data: any) => {
+    const token = localStorage.getItem("token");
+    if (!token) return toast.error("Token missing. Please login again.");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+    const payload = {
+      title: data.title,
+      description: data.description,
+      status: data.status || "PENDING",
+      visibility: data.visibility || "PUBLIC",
+    };
 
-  const handleSubmit = async () => {
     try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-      if (!token) return;
+      if (selectedTodo) {
+        await UpdateTodo(payload, token);
+        toast.success(" Todo updated successfully");
+      } else {
+        await CreateTodo(payload, token);
+        toast.success("🎉 Todo created successfully");
+      }
 
-      await CreateTodo(form, token);
+      reset();
       onTodoCreated();
-    } catch (error) {
-      console.error("Error creating todo:", error);
-    } finally {
-      setLoading(false);
+      clearSelectedTodo();
+    } catch (err: any) {
+      console.error(" Error saving todo:", err.response?.data || err);
+      toast.error(
+        err?.response?.data?.message || "Something went wrong while saving todo."
+      );
     }
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="mb-4">+ Add Todo</Button>
-      </DialogTrigger>
+    <form onSubmit={handleSubmit(onSubmit)} className="mb-6 space-y-4">
+      <input {...register("title")} placeholder="Title" className="w-full" />
+      <textarea
+        {...register("description")}
+        placeholder="Description"
+        className="w-full"
+      />
+      <select {...register("status")} className="w-full">
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="PENDING">Pending</option>
+      </select>
+      <select {...register("visibility")} className="w-full">
+        <option value="PUBLIC">Public</option>
+        <option value="PRIVATE">Private</option>
+      </select>
+      <input type="date" {...register("dueDate")} className="w-full" />
 
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Add New Todo</DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-4">
-          <div>
-            <Label>Title</Label>
-            <Input name="title" value={form.title} onChange={handleChange} />
-          </div>
-
-          <div>
-            <Label>Description</Label>
-            <Textarea name="description" value={form.description} onChange={handleChange} />
-          </div>
-
-          <div>
-            <Label>Due Date</Label>
-            <Input type="date" name="dueDate" value={form.dueDate} onChange={handleChange} />
-          </div>
-
-          <div>
-            <Label>Status</Label>
-            <select name="status" value={form.status} onChange={handleChange} className="w-full border rounded p-2">
-              <option value="PENDING">Pending</option>
-              <option value="IN_PROGRESS">In Progress</option>
-              <option value="COMPLETED">Completed</option>
-            </select>
-          </div>
-
-          <div>
-            <Label>Visibility</Label>
-            <select name="visibility" value={form.visibility} onChange={handleChange} className="w-full border rounded p-2">
-              <option value="PUBLIC">Public</option>
-              <option value="PRIVATE">Private</option>
-            </select>
-          </div>
-
-          <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Creating..." : "Create Todo"}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        {selectedTodo ? "Update Todo" : "Add Todo"}
+      </button>
+    </form>
   );
 };
 

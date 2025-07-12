@@ -5,13 +5,13 @@ export declare class TodoServices {
     constructor(prisma: PrismaService);
     getTodos(): import(".prisma/client").Prisma.PrismaPromise<{
         id: number;
+        createdAt: Date;
         title: string;
         description: string | null;
         status: import(".prisma/client").$Enums.Status;
         visibility: import(".prisma/client").$Enums.Visibility;
         dueDate: Date | null;
         userId: number;
-        createdAt: Date;
         updatedAt: Date;
     }[]>;
     CreateTodo(todoDto: CreateTodoDto, userId: number): Promise<{
@@ -22,13 +22,13 @@ export declare class TodoServices {
         msg: string;
         createdTodo: {
             id: number;
+            createdAt: Date;
             title: string;
             description: string | null;
             status: import(".prisma/client").$Enums.Status;
             visibility: import(".prisma/client").$Enums.Visibility;
             dueDate: Date | null;
             userId: number;
-            createdAt: Date;
             updatedAt: Date;
         };
         message?: undefined;
@@ -40,13 +40,13 @@ export declare class TodoServices {
         message: string;
         data: {
             id: number;
+            createdAt: Date;
             title: string;
             description: string | null;
             status: import(".prisma/client").$Enums.Status;
             visibility: import(".prisma/client").$Enums.Visibility;
             dueDate: Date | null;
             userId: number;
-            createdAt: Date;
             updatedAt: Date;
         };
     }>;
@@ -57,13 +57,13 @@ export declare class TodoServices {
         message: string;
         todos: {
             id: number;
+            createdAt: Date;
             title: string;
             description: string | null;
             status: import(".prisma/client").$Enums.Status;
             visibility: import(".prisma/client").$Enums.Visibility;
             dueDate: Date | null;
             userId: number;
-            createdAt: Date;
             updatedAt: Date;
         }[];
     }>;
@@ -71,13 +71,13 @@ export declare class TodoServices {
         message: string;
         todos: {
             id: number;
+            createdAt: Date;
             title: string;
             description: string | null;
             status: import(".prisma/client").$Enums.Status;
             visibility: import(".prisma/client").$Enums.Visibility;
             dueDate: Date | null;
             userId: number;
-            createdAt: Date;
             updatedAt: Date;
         }[];
     }>;
