@@ -6,18 +6,18 @@ export declare class UserService {
     private authService;
     constructor(prisma: PrismaService, authService: AuthService);
     getUsers(): import(".prisma/client").Prisma.PrismaPromise<{
-        id: number;
         name: string;
         email: string;
         password: string;
         role: import(".prisma/client").$Enums.Role;
+        id: number;
         createdAt: Date;
     }[]>;
     createUser(dto: CreateUserDto): Promise<{
-        id: number;
         name: string;
         email: string;
         role: import(".prisma/client").$Enums.Role;
+        id: number;
         createdAt: Date;
     } | {
         msg: string;
@@ -30,18 +30,18 @@ export declare class UserService {
         message: string;
         access_token: string;
         user: {
-            id: number;
             name: string;
             email: string;
             role: import(".prisma/client").$Enums.Role;
+            id: number;
             createdAt: Date;
         };
     }>;
     UpdateUser(dto: CreateUserDto): Promise<{
-        id: number;
         name: string;
         email: string;
         role: import(".prisma/client").$Enums.Role;
+        id: number;
         createdAt: Date;
     } | {
         message: string;
@@ -67,11 +67,11 @@ export declare class UserService {
                 updatedAt: Date;
             }[];
         } & {
-            id: number;
             name: string;
             email: string;
             password: string;
             role: import(".prisma/client").$Enums.Role;
+            id: number;
             createdAt: Date;
         };
     }>;

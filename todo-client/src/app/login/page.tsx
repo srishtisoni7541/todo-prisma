@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -13,6 +14,8 @@ import { useRouter } from "next/navigation";
 import { loginSchema } from "../lib/validation";
 import { loginUser } from "../services/auth";
 import { setToken } from "../lib/auth";
+import { signIn } from "next-auth/react";
+
 type LoginSchema = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
@@ -27,20 +30,15 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginSchema) => {
-    console.log("Form submitted with data:", data);
     try {
       const response = await loginUser(data);
-
-      console.log(response);
       if (response?.access_token) {
-        setToken(response.access_token); 
-        console.log("✅ Token saved:", response.access_token);
-        router.push("/profile"); 
+        setToken(response.access_token);
+        router.push("/profile");
       } else {
         alert("Login failed: Token missing");
       }
     } catch (err: any) {
-      console.error("❌ Login error:", err?.response?.data || err);
       alert(err?.response?.data?.message || "Login failed");
     }
   };
@@ -86,6 +84,19 @@ export default function LoginPage() {
               Login
             </Button>
           </form>
+
+          {/* OR Divider */}
+          <div className="text-center my-4 text-gray-500 text-sm">OR</div>
+
+          {/* Google Login Button */}
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+             onClick={() => signIn("google", { callbackUrl: "/profile" })}
+          >
+            Login with Google
+          </Button>
         </CardContent>
       </Card>
     </div>

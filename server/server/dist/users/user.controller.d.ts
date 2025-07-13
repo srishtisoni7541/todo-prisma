@@ -5,11 +5,11 @@ export declare class UserController {
     private userService;
     constructor(userService: UserService);
     getAll(): import(".prisma/client").Prisma.PrismaPromise<{
-        id: number;
         name: string;
         email: string;
         password: string;
         role: import(".prisma/client").$Enums.Role;
+        id: number;
         createdAt: Date;
     }[]>;
     getUser(req: any): Promise<{
@@ -30,19 +30,19 @@ export declare class UserController {
                 updatedAt: Date;
             }[];
         } & {
-            id: number;
             name: string;
             email: string;
             password: string;
             role: import(".prisma/client").$Enums.Role;
+            id: number;
             createdAt: Date;
         };
     }>;
     create(dto: CreateUserDto): Promise<{
-        id: number;
         name: string;
         email: string;
         role: import(".prisma/client").$Enums.Role;
+        id: number;
         createdAt: Date;
     } | {
         msg: string;
@@ -55,18 +55,18 @@ export declare class UserController {
         message: string;
         access_token: string;
         user: {
-            id: number;
             name: string;
             email: string;
             role: import(".prisma/client").$Enums.Role;
+            id: number;
             createdAt: Date;
         };
     }>;
     updateUser(dto: CreateUserDto): Promise<{
-        id: number;
         name: string;
         email: string;
         role: import(".prisma/client").$Enums.Role;
+        id: number;
         createdAt: Date;
     } | {
         message: string;
